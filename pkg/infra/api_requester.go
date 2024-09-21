@@ -2,6 +2,7 @@ package infra
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 )
@@ -30,6 +31,10 @@ func (a *ApiRequester) MakeRequest() (interface{}, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, errors.New("not found result for the zip code")
+	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
