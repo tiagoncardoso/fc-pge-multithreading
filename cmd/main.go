@@ -29,7 +29,7 @@ func main() {
 	url2 := buildApiUrl(conf.ApiRequest2URL, os.Args[1])
 
 	go makeRequest(url1, ch1, 0)
-	go makeRequest(url2, ch2, 0)
+	go makeRequest(url2, ch2, 1)
 
 	select {
 	case resp1 := <-ch1:
@@ -44,13 +44,14 @@ func main() {
 	// TODO: create documentation
 }
 
-func makeRequest(url string, ch chan<- interface{}, delay int) {
+func makeRequest(url string, ch chan interface{}, delay int) {
 	time.Sleep(time.Duration(delay) * time.Second)
 
 	requester := infra.NewApiRequester(url)
 	resp, err := requester.MakeRequest()
 	if err != nil {
 		slog.Error("Error making request", "msg", err)
+		<-ch
 	}
 
 	ch <- resp
