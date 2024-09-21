@@ -42,8 +42,6 @@ func main() {
 	case <-time.After(time.Second * time.Duration(conf.RequestTimeout)):
 		slog.Error("Timeout making request")
 	}
-
-	// TODO: create documentation
 }
 
 func makeRequest(url string, ch chan interface{}, delay int) {
